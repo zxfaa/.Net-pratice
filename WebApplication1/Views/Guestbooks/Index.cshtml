@@ -1,0 +1,31 @@
+﻿@model WebApplication1.ViewModels.GuestbooksViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Index</h2>
+
+@Html.AntiForgeryToken()
+@*載入新增留言頁面*@
+<div id="CreateData">
+    @Html.Action("Create")
+</div>
+
+@*載入資料陣列頁面*@
+@Html.Action("GetDataList")
+
+@*匯入驗證欄位所須的JavaScript*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+

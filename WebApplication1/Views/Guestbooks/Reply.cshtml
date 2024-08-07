@@ -1,0 +1,58 @@
+﻿@model WebApplication1.Models.Guestbooks
+
+@{
+    ViewBag.Title = "回覆留言";
+}
+
+@*建立回覆留言所需的表單*@
+
+@using (Html.BeginForm())
+{
+    <h3>回覆留言</h3>
+    @*建立留言所需表格*@
+    <table>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Name)
+            </td>
+            <td>
+                @Html.TextAreaFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Content)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Content)
+                @Html.ValidationMessageFor(model => model.Content)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Reply)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Reply)
+                @Html.ValidationMessageFor(model => model.Reply)
+            </td>
+        </tr>
+    </table>
+    @*一則留言僅可回復一次，若未被回復，則顯示返回列表按鈕*@
+    if (Model.ReplyTime == null)
+    {
+        <input type="submit" value="回覆留言" />
+    }
+    else
+    {
+        <text>此則留言已回覆，請</text>
+        @Html.ActionLink("返回列表", "Index")
+    }
+    @*匯入驗證所須的JavaScript*@
+    @section scripts
+ {
+        @Scripts.Render("~/bundles/jqueryval.js")
+    }
+
+}
