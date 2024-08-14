@@ -125,10 +125,26 @@ namespace WebApplication1.Controllers
             return View();
         }
         //傳入登入的資料
-        [HttpPost]
+        [HttpPost] // 設定此 Action 只接受頁面 POST 資料傳入
         public ActionResult Login(MembersLoginViewModel LoginMember)
         {
-            //
+            // 使用 Service 裡的方法來驗證登入的帳號密碼
+            string ValidateStr = membersService.LoginCheck(LoginMember.Account,
+           LoginMember.Password);
+            // 判斷驗證後結果是否有錯誤訊息
+            if (String.IsNullOrEmpty(ValidateStr))
+            {
+                // 無錯誤訊息，則登入
+                // 重新導向頁面
+                return RedirectToAction("Index", "Guestbooks");
+            }
+            else
+            {
+                // 有驗證錯誤訊息，加入頁面模型中
+                ModelState.AddModelError("", ValidateStr);
+                // 將資料回填至 View 中
+                return View(LoginMember);
+            }
         }
 
         #endregion
