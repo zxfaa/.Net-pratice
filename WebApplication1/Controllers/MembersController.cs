@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using WebApplication1.Security;
 using WebApplication1.Services;
 using WebApplication1.ViewModels;
 
@@ -128,13 +130,32 @@ namespace WebApplication1.Controllers
         [HttpPost] // 設定此 Action 只接受頁面 POST 資料傳入
         public ActionResult Login(MembersLoginViewModel LoginMember)
         {
-            // 使用 Service 裡的方法來驗證登入的帳號密碼
-            string ValidateStr = membersService.LoginCheck(LoginMember.Account,
+           // 使用 Service 裡的方法來驗證登入的帳號密碼
+           string ValidateStr = membersService.LoginCheck(LoginMember.Account,
            LoginMember.Password);
             // 判斷驗證後結果是否有錯誤訊息
             if (String.IsNullOrEmpty(ValidateStr))
             {
                 // 無錯誤訊息，則登入
+                //先藉由Service取得登入者角色資料
+                string RoleData = membersService.GetRole(LoginMember.Account);
+                //設定Jwt
+                JwtService jwtService = new JwtService();
+
+                //從Web.Config撈出資料
+                //Cookie名稱
+                string cookieName = WebConfigurationManager.AppSettings["CookieName"].ToString();
+                string Token = jwtService.GenerateToekn(LoginMember.Account, RoleData);
+                
+                //產生Cookie
+                HttpCookie cookie = new HttpCookie(cookieName);
+                //設定單值
+                cookie.Value = Server.UrlEncode(Token);
+                //寫到用戶端
+                Response.Cookies.Add(cookie);
+                //設定Cookie期限
+                Response.Cookies[cookieName].Expires = DateTime.Now.AddMinutes(Convert.ToInt32(WebConfigurationManager.AppSettings["ExpireMinutes"]));
+
                 // 重新導向頁面
                 return RedirectToAction("Index", "Guestbooks");
             }
