@@ -170,5 +170,23 @@ namespace WebApplication1.Controllers
 
         #endregion
 
+        #region 登出
+        //登出Action
+        [Authorize] // 設定此Action需登入
+        public ActionResult Logout() 
+        {
+            //使用者登出
+            //Cookie名稱
+            string cookieName = WebConfigurationManager.AppSettings["CookieName"].ToString();
+            //清除Cookie
+            HttpCookie cookie = new HttpCookie(cookieName);
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            cookie.Values.Clear();
+            Response.Cookies.Set(cookie);
+            //重新導向至登入Action
+            return RedirectToAction("Login");
+
+        }
+        #endregion
     }
 }
