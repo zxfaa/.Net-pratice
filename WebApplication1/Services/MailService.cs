@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Web;
 
@@ -8,9 +9,9 @@ namespace WebApplication1.Services
 {
     public class MailService
     {
-        private string gmail_account = "";//gmail帳號
-        private string gmail_password = "";//gmail密碼
-        private string gmail_mail = "";//gmail信箱
+        private string gmail_account = "eagle13chen@gmail.com";//gmail帳號
+        private string gmail_password = "jcxx wcxg kleh mnhj";//gmail密碼
+        private string gmail_mail = "eagle13chen@gmail.com";//gmail信箱
 
         #region 寄會員驗證信
         //產生驗證碼
@@ -52,14 +53,13 @@ namespace WebApplication1.Services
         //寄送驗證信的方法
         public void SendRegisterMail(string MailBody,string ToEmail)
         {
-            //建立寄信用Smtp物件,以Gmail為例
-            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            //設定使用的Port
-            SmtpServer.Port = 587;
-            //建立使用者憑據
-            SmtpServer.Credentials = new System.Net.NetworkCredential(gmail_account, gmail_password);
-            //開啟ssl
-            SmtpServer.EnableSsl = true;
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(gmail_account, gmail_password),
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network
+            };
 
             //宣告信件內容物件
             MailMessage mail = new MailMessage();

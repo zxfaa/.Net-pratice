@@ -34,7 +34,7 @@
                         @Html.DisplayNameFor(model => model.DataList[0].Name)
                     </td>
                     <td>
-                        @item.Name
+                        @item.Member.Name
                     </td>
                 </tr>
                 <tr>
@@ -72,8 +72,12 @@
                 <tr>
                     <td colspan="2">
                         @Html.ActionLink(" 修改留言", "Edit", new { Id = item.Id })
-                        @Html.ActionLink(" 回覆留言", "Reply", new { Id = item.Id })
-                        @Html.ActionLink("刪除留言", "Delete", new { Id = item.Id })
+                        @if (User.IsInRole("Admim"))
+                        {
+                            @Html.ActionLink(" 回覆留言", "Reply", new { Id = item.Id })
+                            @Html.ActionLink("刪除留言", "Delete", new { Id = item.Id })
+                        }
+
                     </td>
                 </tr>
             }
@@ -101,7 +105,8 @@
                                         ,
                                         UpdateTargetId = "DataList"
                                     })
-                    @Ajax.ActionLink("<","GetDataList"
+                    @Ajax.ActionLink("<","GetDataList" 
+                                    , new{Page = Model.Paging.NowPage - 1,Search = Model.Search }
                                     , new AjaxOptions
                                     {
                                         InsertionMode = InsertionMode.Replace,

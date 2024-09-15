@@ -54,11 +54,14 @@ namespace WebApplication1.Controllers
         }
 
         //設定留言時傳入資料的Action
+        [Authorize] // 設定此 Action 須登入
         [HttpPost]
         //設定此Action只接受頁面POST資料傳入
         //使用Bind的Include來定義只接收的欄位，用來避免傳入其他不相干值
         public ActionResult Create([Bind(Include="Name,Content")]Guestbooks Data) 
         {
+            //設定新增留言者為登入者
+            Data.Account = User.Identity.Name;
             //使用service來新增一筆資料
             GuestbookService.IntertGuestbooks(Data);
             //重新導向面至開始頁面
@@ -68,15 +71,17 @@ namespace WebApplication1.Controllers
 
         #region 修改留言
         //新增留言頁面要根據傳入編號來決定要修改的資料
+        [Authorize]//設定此Action需登入
         public ActionResult Edit(int Id)
         {
             //取得Service的資料
-            Guestbooks data = GuestbookService.GetDataByID(Id);
+            Guestbooks Data = GuestbookService.GetDataByID(Id);
 
             //將資料傳入view中
-            return View(data);
+            return View(Data);
         }
         //修改留言傳入資料的Action
+        [Authorize]//設釘此Action需登入
         [HttpPost]//設定此Action只接受頁面POST資料傳入
         //使用Bind的Include來定義只接受的欄位，用來避免傳入其他不相干值
         public ActionResult Edit(int Id, [Bind(Include = "Name,Content")]Guestbooks UpdateData)
@@ -86,6 +91,8 @@ namespace WebApplication1.Controllers
             {
                 //將編號設定至修改資料中
                 UpdateData.Id= Id;
+                //設定修改留言的留言者為登入者
+                UpdateData.Account= User.Identity.Name; 
                 //使用Service來修改資料
                 GuestbookService.UpdataGuestbooks(UpdateData);
                 //重新導向頁面至開始頁面
@@ -102,6 +109,7 @@ namespace WebApplication1.Controllers
 
         #region 回覆留言
         //回覆留言頁面要根據傳入編號來決定回復的資料
+        [Authorize(Roles ="Admin")] // 此Action只有Admin角色才可使用
         public ActionResult Reply(int Id)
         {
             //取得頁面所需資料，藉由Service取得
@@ -111,6 +119,7 @@ namespace WebApplication1.Controllers
         }
         //修改留言傳入資料時的Action
         [HttpPost]//設定此Action只接受頁面POST的資料傳入
+        [Authorize(Roles = "Admin")] // 設定此 Action 只有 Admin 角色才可使用
         //使用Bind的Include來定義只接受的欄位，用來避免傳入其他不相干值
         public ActionResult Reply(int Id, [Bind(Include = "Reply.ReplyTime")]Guestbooks ReplyData)
         {
@@ -132,7 +141,10 @@ namespace WebApplication1.Controllers
         }
 
         #endregion
+
         #region 刪除留言
+        //刪除頁面要根據傳入編號來刪除資料
+        [Authorize(Roles = "Admin")] // 設定此 Action 只有 Admin 角色才可使用
         public ActionResult Delete(int Id)
         {
            GuestbookService.DeleteGuestbooks(Id);

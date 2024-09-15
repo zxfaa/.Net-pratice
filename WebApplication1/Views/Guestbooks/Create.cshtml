@@ -7,17 +7,6 @@
 {
     <h3>新增留言</h3>
     <table>
-        @*新增姓名欄位區塊*@
-        <tr>
-            <td>
-                @Html.LabelFor(model =>model.Name)
-            </td>
-            <td>
-                @Html.TextBoxFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-
         @*新增內容欄位區塊*@
         <tr>
             <td>

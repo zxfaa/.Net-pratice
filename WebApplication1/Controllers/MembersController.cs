@@ -109,8 +109,9 @@ namespace WebApplication1.Controllers
         //接收驗證信連結傳來的Action
         public ActionResult EmailValidate(string Account , string AuthCode)
         {
-            //用ViewData 儲存，使用Service進行信箱驗證後的結果訊息
-            ViewData["EmailValidate"] = membersService.EmailValidate(Account, AuthCode);
+
+            // 用 ViewData 儲存，使用 Service 進行信箱驗證後的結果訊息
+            ViewData["EmailValidate"] = membersService.EmailValidate(Account,AuthCode);
             return View();
         }
         #endregion

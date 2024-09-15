@@ -98,7 +98,7 @@ namespace WebApplication1.Services
                 Data.AuthCode = dr["AuthCode"].ToString() ;
                 Data.IsAdmin = Convert.ToBoolean(dr["IsAdmin"]);
 
-            }catch(Exception e)
+            }catch(Exception)
             {
                 //查無資料
                 Data = null;
@@ -127,23 +127,26 @@ namespace WebApplication1.Services
         #region 信箱驗證
         public string EmailValidate(string Account , string AuthCode)
         {
-            //取得傳入帳號的會員資料
+            System.Diagnostics.Debug.WriteLine($"開始驗證 - 帳號: {Account}, 驗證碼: {AuthCode}");
+            // 取得傳入帳號的會員資料
             Members ValidateMember = GetDataByAccount(Account);
-            //宣告驗證後訊息字串
-            string ValidateStr  =  string.Empty;
-            if(ValidateMember != null)
+            // 宣告驗證後訊息字串
+            string ValidateStr = string.Empty;
+            if (ValidateMember != null)
             {
                 //判斷傳入驗證碼與資料庫中是否相同
-                if(ValidateMember.Account == AuthCode)
+                if(ValidateMember.AuthCode == AuthCode)
                 {
                     //將資料庫中的驗證碼設為空
                     //sql更新語法
-                    string sql = $@"update Members set AuthCode = '{string.Empty}'Where Account = '{Account}'";
+                    string sql = $@"update Members set AuthCode = '{string.Empty}'where Account = '{Account}'";
                     try
                     {
                         conn.Open();
                         SqlCommand cmd = new SqlCommand(sql, conn);
-                    }catch (Exception e)
+                        cmd.ExecuteNonQuery(); 
+                    }
+                    catch (Exception e)
                     {
                         throw new Exception(e.Message.ToString());
                     }finally 

@@ -19,15 +19,6 @@
     <table>
         <tr>
             <td>
-                @Html.LabelFor(model => model.Name)
-            </td>
-            <td>
-                @Html.TextBoxFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td>
                 @Html.LabelFor(model => model.Content)
             </td>
             <td>
@@ -45,6 +36,6 @@ else
 {
         <text>此留言已回覆無法修改，請</text>
         @Html.ActionLink("返回列表","Index")
-    }
+}
 
 }

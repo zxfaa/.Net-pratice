@@ -16,7 +16,6 @@ namespace WebApplication1.Models
         [DisplayName("編號")]
         public int Id { get; set; }
        
-
         //帳號
         public string Account {  get; set; }
         // 名字
@@ -45,5 +44,7 @@ namespace WebApplication1.Models
         [DisplayName("回覆時間")]
         public DateTime? ReplyTime { get; set; }
 
+        //會員 Member的外來鍵
+        public Members Member { get; set; } = new Members();
     }
 }
